@@ -1,4 +1,5 @@
 let numMosse = 0;
+let storicoMosse = 0;
 
 window.onload = async function (){
     let max = await fetch("server/getMaxSequenze.php", {method : 'GET'});
@@ -14,31 +15,39 @@ window.onload = async function (){
     let arrImmagini = [];
     arrImmagini.push(immagini["sequenze"][0].img1);
     arrImmagini.push(immagini["sequenze"][0].img2);
-    arrImmagini.push(immagini["sequenze"][0].img3  );
-    console.log(arrImmagini);
+    arrImmagini.push(immagini["sequenze"][0].img3);
 
     let immaginiXhtml = shuffle(arrImmagini);
-    console.log(immaginiXhtml);
 
     let HTMLimages = document.getElementsByClassName("img");
     HTMLimages[0].setAttribute("src", immaginiXhtml[0]);
     HTMLimages[2].setAttribute("src", immaginiXhtml[1]);
     HTMLimages[3].setAttribute("src", immaginiXhtml[2]);
+
+    let mosse = document.getElementById("mosse");
     for(let element of HTMLimages){
         element.addEventListener("click", ()=>{
             let blank = document.querySelector(".blank");
             let src = element.getAttribute("src");
             blank.setAttribute("src", src);
             blank.classList.remove("blank");
+            blank.classList.add("notBlank");
             element.classList.add("blank");
+            element.classList.remove("notBlank");
             element.setAttribute("src", "");
             numMosse++;
-            if(numMosse == 3){
+            storicoMosse++;
+            mosse.innerHTML = storicoMosse;
+            HTMLimages = [];
+            HTMLimages.push(document.querySelector(".notBlank")[0]);
+            
+            console.log(HTMLimages);
+            if(numMosse > 3){
                 alert("Hai Perso, cambio Puzzle...");
+                numMosse = 0;
             }
         });
     }
-
     alert("puzzle caricato !!!");
 
 }
@@ -61,15 +70,6 @@ function shuffle(array) {
   
     return array;
   }
-
-function pause(millis)
-  {
-      var date = new Date();
-      var curDate = null;
-      do { curDate = new Date(); }
-      while(curDate-date < millis);
-  }
-
 
 
 /*
